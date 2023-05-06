@@ -2,19 +2,20 @@ package domain;
 
 public abstract class Modifier implements Item {
 
-	private Box casilla;
-	
-	public Modifier(Box casilla) {
-		this.casilla = casilla;
+	private final Valor cara;
+	public Modifier(Valor cara) {
+		this.cara = cara;
+		SetObject();
 	}
 
 	@Override
-	public abstract void getpower(String name);
+	public abstract void DoAction(Ficha ficha);
 
 	@Override
-	public void SetBox() {
-		casilla.setItem(this);
+	public abstract String toString();
+
+	@Override
+	public void SetObject() {
+		cara.setModifier(this);
 	}
-
-
 }

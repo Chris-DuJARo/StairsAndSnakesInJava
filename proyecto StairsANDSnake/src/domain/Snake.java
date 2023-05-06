@@ -1,22 +1,17 @@
 package domain;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Snake extends Tramp {
 	
-	public Snake (Box finalBox, Box startBox) {
-		super(startBox, finalBox);
-		SetBox();
+	public Snake (Box finalBox, Box startBox, boolean transformar) {
+		super(startBox, finalBox,transformar);
+		SetObject();
 	}
-	
-	public void getpower(String name) {
-		Player player= casillafin.getPlayer(name);
-		player.mustMove(casillainicial);
+
+	public void DoAction(Color color) {
+
 	}
-	
-	public void SetBox() {
-		casillainicial.setItem(this);
-		casillafin.setItem(this);
-	}
+
 
 }

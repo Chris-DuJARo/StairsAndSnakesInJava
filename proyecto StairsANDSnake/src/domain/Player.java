@@ -1,44 +1,50 @@
 package domain;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Player {
+	private final Color color;
 
-	private Tablero tablero;
-	
-	private Box position;
+	private final String name;
 
-	private Color color;
+	private final ArrayList<Dado> dados ;
 
-	private String name;
+	private final ArrayList<Ficha> fichas;
 
-	private Dado  dado ;
-
-	public Player(Tablero tbl, String name) {
-		
+	public Player(String name, Color color, ArrayList<Dado> dados) {
+		fichas = new ArrayList<>();
 		this.name = name;
-		tablero = tbl;
-		position = tbl.getBox(0,0);
-	}
-	
-	public void setPositionBox(Box position) {
-		this.position = position;
-	}
-	
-	public Box getPosition() {
-		return position;
+		this.color = color;
+		this.dados = dados;
 	}
 
-	public void mustMove(Box position) {
-		tablero.changePlayerToSpecial(name, position);
-	}
-	
 	public void playAturn() {
-		int steps,jugada;
-		dado.lanzarDado();
-		jugada = dado.getDado() + position.getValue();
-		tablero.realizarJugada(name,jugada);
+		for(Dado d: dados) {
+			d.lanzarDado();
+		}
 	}
-		
-		
+
+	public void moveToken() {
+		Ficha ficha = fichas.get(0);
+		Box casilla = ficha.getBox();
+		casilla.moveToken(ficha);
+
+	}
+	public Color getColor() {
+		return color;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public ArrayList<Ficha> getFichas(){
+		return fichas;
+	}
+
+	public void setToken(Ficha ficha) {
+		fichas.add(ficha);
+	}
+
 }
