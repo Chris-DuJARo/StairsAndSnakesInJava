@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.Color;
 import java.util.HashMap;
 
-public  class Box {
-	private Tablero tablero;
+public class Box {
+	protected final Tablero tablero;
 	private int value ;
-	private Item item;
-	private HashMap<Color,Ficha> tokens;
+	protected Item item;
+	private final HashMap<Color,Ficha> tokens;
 	
 	public  Box(Tablero tbl) {
 		tokens = new HashMap<>();
@@ -26,9 +26,14 @@ public  class Box {
 	public Tablero getTablero(){
 		return tablero;
 	}
+
+	public Item getItem(){
+		return item;
+	}
 	
 	public void deleteToken(Ficha ficha) {
-		tokens.remove(ficha);
+		Color color = ficha.getColor();
+		tokens.remove(color);
 		ficha.setBox(null);
 	}
 	
@@ -41,10 +46,10 @@ public  class Box {
 		return item != null;
 	}
 
-	public boolean hasAnyToken() {
-		return tokens.isEmpty();
-	}
 
+	public boolean hasApower(){
+		return false;
+	}
 	public void setItem(Item item) {
 		this.item = item;
 	}
@@ -62,12 +67,34 @@ public  class Box {
 					cara.getModifier().toString() +" Desea usarlo? ");
 			if(JOptionPane.OK_OPTION == res) {
 				moveTokenWithModifer(ficha,cara);
+			}else {
+				if (reNew.hasApower()) {
+					reNew.moveTokenWithPower(ficha);
+
+				} else if (reNew.hasAnyTramp()) {
+					Item trampa = reNew.getItem();
+					trampa.DoAction(ficha);
+				}
+			}
+		}else if (cara.getModifier() == null){
+			if (reNew.hasApower()) {
+				reNew.moveTokenWithPower(ficha);
+
+			} else if (reNew.hasAnyTramp()) {
+				Item trampa = reNew.getItem();
+				trampa.DoAction(ficha);
 			}
 		}
+
 	}
 	private void moveTokenWithModifer(Ficha ficha,Valor movimiento) {
 		Modifier modifier = movimiento.getModifier();
 		modifier.DoAction(ficha);
 
 	}
+
+	public void moveTokenWithPower(Ficha ficha) {
+
+	}
+
 }

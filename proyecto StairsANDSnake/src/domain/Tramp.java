@@ -1,17 +1,24 @@
 package domain;
-
-import java.awt.*;
-
 public abstract class Tramp implements Behavior {
 	
 	protected Box casillainicial;
 	protected Box casillafin;
 
 	private String comportamiento;
+
+	public Box getCasillaInicial(){
+		return casillainicial;
+	}
+
+	public Box getCasillafin(){
+		return casillafin;
+	}
 	
 	public Tramp (Box casillainicial, Box casillafin, boolean canChange) {
 		this.casillainicial = casillainicial;
 		this.casillafin = casillafin;
+		SetObject();
+
 		if (canChange){
 			setBehavior(Behavior.normal);
 		}else {
@@ -24,11 +31,18 @@ public abstract class Tramp implements Behavior {
 		this.comportamiento = comportamiento;
 	}
 
+	public Box getCasillainicial() {
+		return casillainicial;
+	}
+
 	@Override
 	public void SetObject(){
 		casillainicial.setItem(this);
 		casillafin.setItem(this);
 	}
 
-	public abstract void DoAction(Color color);
+	public void DoAction(Ficha ficha){
+		casillainicial.deleteToken(ficha);
+		casillafin.addToken(ficha.getColor(), ficha);
+	}
 }

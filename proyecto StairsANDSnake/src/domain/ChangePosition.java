@@ -18,6 +18,14 @@ public class ChangePosition extends Modifier{
 		casillaCambio.deleteToken(ficheOpponent);
 		MyCasilla.addToken(ficheOpponent.getColor(),ficheOpponent);
 		casillaCambio.addToken(ficha.getColor(),ficha);
+
+		if (casillaCambio.hasApower()) {
+			casillaCambio.moveTokenWithPower(ficha);
+
+		} else if (casillaCambio.hasAnyTramp()) {
+			Item trampa = casillaCambio.getItem();
+			trampa.DoAction(ficha);
+		}
 	}
 
     @Override

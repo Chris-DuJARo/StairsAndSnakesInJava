@@ -14,9 +14,7 @@ public class MovementNerf extends Modifier {
 		Box casilla = ficha.getBox();
 		casilla.deleteToken(ficha);
 		int newPosition = casilla.getValue() - 1;
-		Tablero tablero = casilla.getTablero();
-		Box renew = tablero.searchBox(newPosition);
-		renew.addToken(ficha.getColor(),ficha);
+		MovementBuff.changePositions(ficha, casilla, newPosition);
 	}
 
 	@Override

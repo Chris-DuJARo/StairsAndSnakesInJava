@@ -7,7 +7,6 @@ public abstract class Modifier implements Item {
 		this.cara = cara;
 		SetObject();
 	}
-
 	@Override
 	public abstract void DoAction(Ficha ficha);
 
