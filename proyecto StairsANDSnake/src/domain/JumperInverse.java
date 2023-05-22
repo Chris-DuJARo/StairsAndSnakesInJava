@@ -13,20 +13,22 @@ public class JumperInverse extends Box{
     }
 
     @Override
-    public void moveTokenWithPower(Ficha ficha) {
+    public void moveTokenWithPower(Ficha ficha) throws StairsAndSnakesException {
+        super.moveTokenWithPower(ficha);
         int cantidad;
         Random random;
         random = new Random();
-        cantidad = random.nextInt(1,getValue()+1);
+        cantidad = random.nextInt(getValue()-6,getValue()-1);
         VerifyReNew(ficha, tablero.searchBox(cantidad));
     }
 
-    static void VerifyReNew(Ficha ficha, Box box) {
+    static void VerifyReNew(Ficha ficha, Box box) throws StairsAndSnakesException{
         Box renew = box;
         Box casilla = ficha.getBox();
 
         casilla.deleteToken(ficha);
         renew.addToken(ficha.getColor(),ficha);
+        ficha.setMaxCas(renew.getValue());
 
         if (renew.hasAnyTramp()) {
             Item trampa = renew.getItem();

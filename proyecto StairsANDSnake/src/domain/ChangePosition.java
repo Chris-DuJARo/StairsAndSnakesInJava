@@ -7,17 +7,18 @@ public class ChangePosition extends Modifier{
 	}
 
 	@Override
-	public void DoAction(Ficha ficha) {
+	public void DoAction(Ficha ficha) throws StairsAndSnakesException {
 		Box MyCasilla = ficha.getBox();
 		Box casillaCambio;
 		Tablero tablero =MyCasilla.getTablero();
 		Ficha ficheOpponent = tablero.searchOpponent(ficha.getColor());
 		casillaCambio = ficheOpponent.getBox();
-
 		MyCasilla.deleteToken(ficha);
 		casillaCambio.deleteToken(ficheOpponent);
 		MyCasilla.addToken(ficheOpponent.getColor(),ficheOpponent);
 		casillaCambio.addToken(ficha.getColor(),ficha);
+		ficheOpponent.setMaxCas(MyCasilla.getValue());
+		ficha.setMaxCas(casillaCambio.getValue());
 
 		if (casillaCambio.hasApower()) {
 			casillaCambio.moveTokenWithPower(ficha);

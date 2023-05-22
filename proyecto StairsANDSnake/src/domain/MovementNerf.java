@@ -1,7 +1,5 @@
 package domain;
 
-import java.awt.*;
-
 public class MovementNerf extends Modifier {
 
 
@@ -10,7 +8,7 @@ public class MovementNerf extends Modifier {
 	}
 	
 	@Override
-	public void DoAction(Ficha ficha) {
+	public void DoAction(Ficha ficha) throws StairsAndSnakesException{
 		Box casilla = ficha.getBox();
 		casilla.deleteToken(ficha);
 		int newPosition = casilla.getValue() - 1;

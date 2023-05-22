@@ -1,8 +1,10 @@
 package presentation;
 
-import javax.swing.JDialog;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 
-public class ficha extends JDialog {
-    public ficha() {
-    }
+public class ficha extends JDialog{
+    
 }

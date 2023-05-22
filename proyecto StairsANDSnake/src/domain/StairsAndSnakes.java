@@ -1,20 +1,26 @@
 package domain;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class StairsAndSnakes {
-	private final Tablero tablero;
+	private Tablero tablero;
 
-	public StairsAndSnakes (ArrayList<String> nombres, ArrayList<Color> colores, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
-		if(porC > 50) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_PORC_ALLOW);
-		if(2*(numE + numS) > (10*tamano) - porC) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_SPACE);
+	private int turno = 0;
 
+	protected  boolean win = false;
+	public StairsAndSnakes (ArrayList<String> nombres, ArrayList<Color> colores,String rival, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
+		if (nombres.get(0).length() < 1 || nombres.get(1).length() < 1) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_PLAYERS);
+		if (porM > 6) throw  new StairsAndSnakesException(StairsAndSnakesException.NOT_ALLOW_MODIFIERS);
+		if(porC > (10*tamano) /4) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_PORC_ALLOW);
+		if((numE + numS)*2 > ((10*tamano)/2) - (1 + porC)) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_SPACE);
 		tablero = new Tablero(nombres,colores,numS,numE,tamano,porC,porM,transformar);
 	}
-	public StairsAndSnakes(String nombre, Color color, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
+	public StairsAndSnakes(String nombre, Color color,String rival, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
 		if(porC > 50) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_PORC_ALLOW);
 		if(numE + numS > 10* tamano) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_SPACE);
+		if (porM > 6) throw  new StairsAndSnakesException(StairsAndSnakesException.NOT_ALLOW_MODIFIERS);
 
 		ArrayList<String> jugadores = new ArrayList<>();
 		ArrayList<Color> colores = new ArrayList<>();
@@ -29,13 +35,34 @@ public class StairsAndSnakes {
 		return tablero;
 	}
 
+	public int getTurno() {
+		return turno;
+	}
+
+	public boolean getWin(){
+		return win;
+	}
+
 	public void changeDados(String name){
 		Player jugador = tablero.getJugador(name);
 		jugador.playAturn();
+		turno ++;
 	}
 
-	public void movePlayer(String name) {
+	public void movePlayer(String name) throws StairsAndSnakesException{
 		Player jugador = tablero.getJugador(name);
 		jugador.moveToken();
+		verifyWin(name);
 	}
+
+	public void verifyWin(String name) {
+		Player player = tablero.getJugador(name);
+		Ficha ficha = player.getFichas().get(0);
+		int posicion = ficha.getBox().getValue();
+		if (posicion == tablero.getWidth() * tablero.getWidth()){
+			win = true;
+			JOptionPane.showMessageDialog(null,"Felicidades el jugador: "+ player + " Ha ganado!!!");
+		}
+	}
+
 }

@@ -10,20 +10,19 @@ public class Recoil extends Box{
     }
 
     @Override
-    public void moveTokenWithPower(Ficha ficha) {
-        try {
-            Snake snake = tablero.searchSnake(ficha);
-            Box casilla = ficha.getBox();
-            Box reNew = snake.getCasillainicial();
-            casilla.deleteToken(ficha);
-            reNew.addToken(ficha.getColor(), ficha);
+    public void moveTokenWithPower(Ficha ficha) throws StairsAndSnakesException {
+        Snake snake = tablero.searchSnake(ficha);
+        if (snake == null) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_SNAKE);
+        Box casilla = ficha.getBox();
+        super.moveTokenWithPower(ficha);
+        Box reNew = snake.getCasillainicial();
+        casilla.deleteToken(ficha);
+        reNew.addToken(ficha.getColor(), ficha);
+        ficha.setMaxCas(reNew.getValue());
 
-            if (reNew.hasAnyTramp()) {
-                Item trampa = reNew.getItem();
-                trampa.DoAction(ficha);
-            }
-        } catch (StairsAndSnakesException e){
-            e.getMessage();
+        if (reNew.hasAnyTramp()) {
+            Item trampa = reNew.getItem();
+            trampa.DoAction(ficha);
         }
     }
 }

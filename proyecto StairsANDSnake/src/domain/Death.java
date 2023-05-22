@@ -10,10 +10,12 @@ public class Death extends Box{
     }
 
     @Override
-    public void moveTokenWithPower(Ficha ficha) {
+    public void moveTokenWithPower(Ficha ficha) throws StairsAndSnakesException{
+        super.moveTokenWithPower(ficha);
         Box reNew = tablero.searchBox(1);
         Box casilla = ficha.getBox();
         casilla.deleteToken(ficha);
         reNew.addToken(ficha.getColor(),ficha);
+        ficha.setMaxCas(reNew.getValue());
     }
 }

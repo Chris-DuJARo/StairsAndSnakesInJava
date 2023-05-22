@@ -6,7 +6,7 @@ import java.util.Random;
 public class Dado{
 
 	private final ArrayList<Valor> values;
-	private  int probabilidad;
+	private final int probabilidad;
 	private int state;
 
 	public Dado(int porM) {
@@ -21,7 +21,7 @@ public class Dado{
 	public void lanzarDado() {
 		Random random = new Random();
 		int cara;
-		int index =  random.nextInt(5);
+		int index =  random.nextInt(0,6);
 		state = values.get(index).getNumero();
 
 		for(Valor v: values) {
@@ -31,7 +31,7 @@ public class Dado{
 		int contador = 0;
 		while (contador < probabilidad){
 
-			cara = random.nextInt(6);
+			cara = random.nextInt(0,6);
 			Valor valor = values.get(cara);
 			if(valor.getModifier() == null) {
 				setRandomModifierToSomeFace(valor, random);
@@ -41,7 +41,7 @@ public class Dado{
 	}
 
 	private void setRandomModifierToSomeFace(Valor cara,Random random) {
-		int mdf = random.nextInt(3)+1;
+		int mdf = random.nextInt(1,4);
 
 		switch (mdf) {
 			case 1 -> new MovementNerf(cara);
@@ -53,7 +53,7 @@ public class Dado{
 		if(state == -1) {
 			return new Valor(0);
 		}else {
-			return values.get(state);
+			return values.get(state -1);
 		}
 	}
 

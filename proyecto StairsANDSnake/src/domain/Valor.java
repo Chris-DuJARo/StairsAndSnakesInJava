@@ -1,8 +1,8 @@
 package domain;
 
 public class Valor {
-    int numero;
-    Modifier modificador = null;
+    private final int numero;
+    private Modifier modificador = null;
     public Valor(int value){
         this.numero = value;
     }

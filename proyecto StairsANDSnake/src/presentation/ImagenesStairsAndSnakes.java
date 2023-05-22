@@ -1,21 +1,23 @@
 package presentation;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 public class ImagenesStairsAndSnakes extends JPanel {
-    String nombreImagen;
+	
+		String nombreImagen;
+		
+		public ImagenesStairsAndSnakes(String nombreImagen) {
+			this.nombreImagen = nombreImagen;
+		}
+		
+		@Override
+		public void paint(Graphics g) {
+			Image fondo = new ImageIcon(getClass().getResource("Imagenes/"+nombreImagen+".png")).getImage();
+			g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
+			setOpaque(false);
+			super.paint(g);
+		}
+	
 
-    public ImagenesStairsAndSnakes(String nombreImagen) {
-        this.nombreImagen = nombreImagen;
-    }
-
-    public void paint(Graphics g) {
-        Image fondo = (new ImageIcon(this.getClass().getResource("Imagenes/" + this.nombreImagen + ".png"))).getImage();
-        g.drawImage(fondo, 0, 0, this.getWidth(), this.getHeight(), this);
-        this.setOpaque(false);
-        super.paint(g);
-    }
 }

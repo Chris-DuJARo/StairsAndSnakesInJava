@@ -17,7 +17,7 @@ public class StairsAndSnakesTest {
 
         String nombre = "Christian";
         Color color = Color.red;
-        myStairsGame = new StairsAndSnakes(nombre,color,10,5,4,false,0,0);
+        myStairsGame = new StairsAndSnakes(nombre,color,"Humano",10,5,4,false,0,0);
 
         myTablero = myStairsGame.getTablero();
         myDades = myTablero.getDados();
@@ -35,7 +35,7 @@ public class StairsAndSnakesTest {
 
         String nombre = "Christian";
         Color color = Color.red;
-        myStairsGame = new StairsAndSnakes(nombre,color,10,5,4,false,0,1);
+        myStairsGame = new StairsAndSnakes(nombre,color,"Maquina",10,5,4,false,0,1);
         myTablero = myStairsGame.getTablero();
         myDade = myTablero.getDados().get(0);
         myStairsGame.changeDados("Christian");
@@ -53,7 +53,7 @@ public class StairsAndSnakesTest {
 
         String nombre = "Christian";
         Color color = Color.red;
-        myStairsGame = new StairsAndSnakes(nombre,color,10,5,4,false,0,6);
+        myStairsGame = new StairsAndSnakes(nombre,color,"Maquina",10,5,4,false,0,6);
         myTablero = myStairsGame.getTablero();
         myDade = myTablero.getDados().get(0);
         myStairsGame.changeDados("Christian");
@@ -78,7 +78,7 @@ public class StairsAndSnakesTest {
         colores.add(Color.RED);
         colores.add(Color.BLUE);
 
-        myStairsGame = new StairsAndSnakes(nombres,colores,10,5,4,false,0,0);
+        myStairsGame = new StairsAndSnakes(nombres,colores,"Humano",10,0,0,false,0,0);
         myTablero = myStairsGame.getTablero();
         assertEquals(myTablero.getJugador("Christian").getName(),"Christian");
         assertEquals(myTablero.getJugador("Miguel").getName(),"Miguel");
@@ -90,7 +90,7 @@ public class StairsAndSnakesTest {
         StairsAndSnakes myStairsGame;
         Tablero myTablero;
 
-        myStairsGame = new StairsAndSnakes("Christian",Color.RED,10,4,5,false,0,0);
+        myStairsGame = new StairsAndSnakes("Christian",Color.RED,"Maquina",10,4,5,false,0,0);
         myTablero = myStairsGame.getTablero();
         Player player = myTablero.getJugador("Christian");
         Ficha ficha = player.getFichas().get(0);
@@ -105,7 +105,7 @@ public class StairsAndSnakesTest {
     public void modifierShouldDoAnAction() throws StairsAndSnakesException {
 
         StairsAndSnakes myStairsGame;
-        myStairsGame = new StairsAndSnakes("Christian",Color.RED,10,4,5,false,0,6);
+        myStairsGame = new StairsAndSnakes("Christian",Color.RED,"Maquina",10,4,5,false,0,6);
         myStairsGame.changeDados("Christian");
         myStairsGame.movePlayer("Christian");
     }
@@ -113,7 +113,7 @@ public class StairsAndSnakesTest {
     @Test
     public void shouldHaveSpecialsBoxs() throws StairsAndSnakesException {
         StairsAndSnakes myStairsGame;
-        myStairsGame = new StairsAndSnakes("Christian", Color.RED, 10, 1, 1, false, 20, 0);
+        myStairsGame = new StairsAndSnakes("Christian", Color.RED,"Maquina", 10, 1, 1, false, 20, 0);
         Tablero myTablero = myStairsGame.getTablero();
         int i = 1;
 
@@ -131,7 +131,7 @@ public class StairsAndSnakesTest {
     @Test
     public void shouldHaveSomeStairsOrSnakes() throws StairsAndSnakesException {
         StairsAndSnakes myStairsGame;
-        myStairsGame = new StairsAndSnakes("Christian", Color.RED, 10, 1, 1, false, 0, 0);
+        myStairsGame = new StairsAndSnakes("Christian", Color.RED,"Maquina", 10, 1, 1, false, 0, 0);
         Tablero tablero = myStairsGame.getTablero();
         int i=1;
         while (true) {
@@ -148,7 +148,7 @@ public class StairsAndSnakesTest {
     @Test
     public void stairsOrSnakeShouldMoveAplayer() throws StairsAndSnakesException {
         StairsAndSnakes myStairsGame;
-        myStairsGame = new StairsAndSnakes("Christian", Color.RED, 10, 16, 17, false, 0, 0);
+        myStairsGame = new StairsAndSnakes("Christian", Color.RED,"Maquina", 10, 16, 17, false, 0, 0);
         myStairsGame.changeDados("Christian");
         Tablero tablero = myStairsGame.getTablero();
         int cantidad = tablero.getDados().get(0).getDado().getNumero();
@@ -165,7 +165,7 @@ public class StairsAndSnakesTest {
     public void specialBoxShouldMoveAplayer(){
         try {
         StairsAndSnakes myStairsGame;
-        myStairsGame = new StairsAndSnakes("Christian", Color.RED, 10, 5, 5, false, 40, 0);
+        myStairsGame = new StairsAndSnakes("Christian", Color.RED,"Maquina", 10, 5, 5, false, 40, 0);
         myStairsGame.changeDados("Christian");
         Tablero tablero = myStairsGame.getTablero();
         int cantidad = tablero.getDados().get(0).getDado().getNumero() + 1;
@@ -202,7 +202,7 @@ public class StairsAndSnakesTest {
                     assertNull(mySnake);
 
                 } else if (tablero.searchBox(cantidad) instanceof Question) {
-                    System.out.println("Question");
+                    myStairsGame.movePlayer("Christian");
                 }
             }else {
                 specialBoxShouldMoveAplayer();

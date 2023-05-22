@@ -6,7 +6,6 @@ public class Jumper extends Box {
     public int salto;
     public Jumper(Tablero tbl) {
         super(tbl);
-        salto = 10*getTablero().getWidth() - getValue();
     }
 
     @Override
@@ -14,11 +13,12 @@ public class Jumper extends Box {
         return true;
     }
     @Override
-    public void moveTokenWithPower(Ficha ficha) {
+    public void moveTokenWithPower(Ficha ficha) throws StairsAndSnakesException{
+        super.moveTokenWithPower(ficha);
         int cantidad;
         Random random;
         random = new Random();
-        cantidad = random.nextInt(getValue(),salto);
+        cantidad = random.nextInt(getValue()+ 1,getValue() + 6);
         JumperInverse.VerifyReNew(ficha, tablero.searchBox(cantidad));
     }
 }

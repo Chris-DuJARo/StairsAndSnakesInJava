@@ -10,21 +10,19 @@ public class Movement extends Box{
     }
 
     @Override
-    public void moveTokenWithPower(Ficha ficha)  {
-        try {
+    public void moveTokenWithPower(Ficha ficha) throws StairsAndSnakesException {
+        Stair stair = tablero.searchStair(ficha);
+        if (stair == null) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_STAIR);
+        super.moveTokenWithPower(ficha);
+        Box casilla = ficha.getBox();
+        Box reNew = stair.getCasillainicial();
+        casilla.deleteToken(ficha);
+        reNew.addToken(ficha.getColor(), ficha);
+        ficha.setMaxCas(reNew.getValue());
 
-            Stair stair = tablero.searchStair(ficha);
-            Box casilla = ficha.getBox();
-            Box reNew = stair.getCasillainicial();
-            casilla.deleteToken(ficha);
-            reNew.addToken(ficha.getColor(), ficha);
-
-            if (reNew.hasAnyTramp()) {
-                Item trampa = reNew.getItem();
-                trampa.DoAction(ficha);
-            }
-        } catch (StairsAndSnakesException e){
-            e.getMessage();
+        if (reNew.hasAnyTramp()) {
+            Item trampa = reNew.getItem();
+            trampa.DoAction(ficha);
         }
     }
 }

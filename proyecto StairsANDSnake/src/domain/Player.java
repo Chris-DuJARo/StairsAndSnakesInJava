@@ -25,11 +25,22 @@ public class Player {
 		}
 	}
 
-	public void moveToken() {
+	public void moveToken() throws StairsAndSnakesException{
 		Ficha ficha = fichas.get(0);
-		Box casilla = ficha.getBox();
-		casilla.moveToken(ficha);
 
+		if (ficha.canMove) {
+			Box casilla = ficha.getBox();
+			casilla.moveToken(ficha);
+		} else {
+			boolean nowCan;
+			Box casilla = ficha.getBox();
+			if (casilla instanceof Question){
+				nowCan = ((Question) casilla).doQuestion(ficha);
+				if(nowCan) moveToken();
+			}else {
+				ficha.canMove = true;
+			}
+		}
 	}
 	public Color getColor() {
 		return color;
@@ -45,6 +56,11 @@ public class Player {
 
 	public void setToken(Ficha ficha) {
 		fichas.add(ficha);
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

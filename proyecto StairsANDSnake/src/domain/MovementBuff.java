@@ -7,17 +7,18 @@ public class MovementBuff extends Modifier{
 	}
 
 	@Override
-	public void DoAction(Ficha ficha) {
+	public void DoAction(Ficha ficha) throws StairsAndSnakesException{
 		Box casilla = ficha.getBox();
 		casilla.deleteToken(ficha);
 		int newPosition = casilla.getValue() + 1;
 		changePositions(ficha, casilla, newPosition);
 	}
 
-	public static void changePositions(Ficha ficha, Box casilla, int newPosition) {
+	public static void changePositions(Ficha ficha, Box casilla, int newPosition) throws StairsAndSnakesException {
 		Tablero tablero = casilla.getTablero();
 		Box renew = tablero.searchBox(newPosition);
 		renew.addToken(ficha.getColor(),ficha);
+		ficha.setMaxCas(renew.getValue());
 
 		if (renew.hasApower()) {
 			renew.moveTokenWithPower(ficha);

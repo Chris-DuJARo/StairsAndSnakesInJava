@@ -30,12 +30,16 @@ public class Tablero {
 		
 	}
 
-	public int getWidth() {
-		return  width;
+	public int getWidth(){
+		return width;
 	}
 
 	public Player getJugador(String name) {
 		return players.get(name);
+	}
+
+	public Box[][] getBoxs(){
+		return boxs;
 	}
 
 	private void makeDados(int porM){
@@ -64,12 +68,14 @@ public class Tablero {
 			Box ibox = boxs[ramBoxF[0]][ramBoxF[1]];
 			Box fbox = boxs[ramBoxI[0]][ramBoxI[1]];
 
-			if(ibox.getValue() > fbox.getValue() && fbox.getValue() > 1) {
-				if (!ibox.hasApower() && !fbox.hasApower()) {
-					if (!ibox.hasAnyTramp() && !fbox.hasAnyTramp()) {
-						Snake snake = new Snake(ibox, fbox, transformar);
-						snakes.add(snake);
-						contador++;
+			if(ibox.getValue() > fbox.getValue() && fbox.getValue() > 1 && ibox.getValue() <width*width & fbox.getValue() <width*width) {
+				if(ibox.getValue() - fbox.getValue() >= width) {
+					if (!ibox.hasApower() && !fbox.hasApower()) {
+						if (!ibox.hasAnyTramp() && !fbox.hasAnyTramp()) {
+							Snake snake = new Snake(ibox, fbox, transformar);
+							snakes.add(snake);
+							contador++;
+						}
 					}
 				}
 			}
@@ -84,12 +90,14 @@ public class Tablero {
 			Box ibox = boxs[ramBoxF[0]][ramBoxF[1]];
 			Box fbox = boxs[ramBoxI[0]][ramBoxI[1]];
 
-			if(ibox.getValue() < fbox.getValue() && ibox.getValue() > 1) {
-				if (!ibox.hasApower() && !fbox.hasApower()) {
-					if (!ibox.hasAnyTramp() && !fbox.hasAnyTramp()) {
-						Stair stair = new Stair(ibox, fbox, transformar);
-						stairs.add(stair);
-						contador++;
+			if(ibox.getValue() < fbox.getValue() && ibox.getValue() > 1 && ibox.getValue() <width*width & fbox.getValue() <width*width) {
+				if(fbox.getValue() - ibox.getValue() >= width) {
+					if (!ibox.hasApower() && !fbox.hasApower()) {
+						if (!ibox.hasAnyTramp() && !fbox.hasAnyTramp()) {
+							Stair stair = new Stair(ibox, fbox, transformar);
+							stairs.add(stair);
+							contador++;
+						}
 					}
 				}
 			}
@@ -172,23 +180,42 @@ public class Tablero {
 				boxs[i][j] = new Box(this);
 			}
 		}
+		if(width % 2 !=0) makeBoxesOdd(porC,numStairs,numSnakes);
+		else {
+			int numCasilla = 1;
+			for (int i = width - 1; i >= 0; i--) {
+				if (i % 2 != 0) {
+					for (int j = 0; j <= width - 1; j++) {
+						boxs[i][j].setValue(numCasilla);
+						numCasilla++;
+					}
+				} else {
+					for (int k = width - 1; k >= 0; k--) {
+						boxs[i][k].setValue(numCasilla);
+						numCasilla++;
+					}
+				}
+			}
+			castSpecials(porC, numStairs, numSnakes);
+		}
+	}
 
+	private void makeBoxesOdd(int porC,int numStairs,int numSnakes) {
 		int numCasilla = 1;
-		for(int i=width-1;i>=0;i--) {
-			if(i%2 != 0) {
-				for (int j = 0; j <= width -1; j++) {
+		for (int i = width - 1; i >= 0; i--) {
+			if (i % 2 == 0) {
+				for (int j = 0; j <= width - 1; j++) {
 					boxs[i][j].setValue(numCasilla);
 					numCasilla++;
 				}
-			}
-			else {
-				for (int k=width-1; k >= 0; k--) {
+			} else {
+				for (int k = width - 1; k >= 0; k--) {
 					boxs[i][k].setValue(numCasilla);
 					numCasilla++;
 				}
 			}
 		}
-		castSpecials(porC,numStairs,numSnakes);
+		castSpecials(porC, numStairs, numSnakes);
 	}
 
 	private void castSpecials(int porC,int numStairs,int numSnakes){
@@ -205,7 +232,7 @@ public class Tablero {
 				int value = boxWithOutPower.getValue();
 				Box BoxWithPower = getRamdomBox();
 
-				if (!boxWithOutPower.hasApower() && value > 1) {
+				if (!boxWithOutPower.hasApower() && value > 1 && value <width*10) {
 					setBox(fila, columna, BoxWithPower, value);
 					contador++;
 				}
@@ -221,7 +248,7 @@ public class Tablero {
 				int value = boxWithOutPower.getValue();
 				Box BoxWithPower = getRamdomBoxNoStairs();
 
-				if (!boxWithOutPower.hasApower() && value > 1) {
+				if (!boxWithOutPower.hasApower() && value > 1 & value < width*10) {
 					setBox(fila, columna, BoxWithPower, value);
 					contador++;
 				}
@@ -236,7 +263,7 @@ public class Tablero {
 				int value = boxWithOutPower.getValue();
 				Box BoxWithPower = getRamdomBoxNoSnakes();
 
-				if (!boxWithOutPower.hasApower() && value > 1) {
+				if (!boxWithOutPower.hasApower() && value > 1 && value < width*10) {
 					setBox(fila, columna, BoxWithPower, value);
 					contador++;
 				}
@@ -251,7 +278,7 @@ public class Tablero {
 				int value = boxWithOutPower.getValue();
 				Box BoxWithPower = getRamdomBoxNoItems();
 
-				if (!boxWithOutPower.hasApower() && value > 1) {
+				if (!boxWithOutPower.hasApower() && value > 1 && value<width*10) {
 					setBox(fila, columna, BoxWithPower, value);
 					contador++;
 				}
@@ -268,12 +295,28 @@ public class Tablero {
 		return dados;
 	}
 
-	public Box searchBox(int cantidad){
-		if (cantidad > 10*width ) {
-			searchBox(10*width);
+	public int[] searchRowAndColumn(int cantidad) {
+		int[] posiciones = new int[2];
+		if(cantidad <= 1) {
+			posiciones[0] = 0;
+			posiciones[1] = 1;
 		}
-		for (int i=0;i<width;i++) {
-			for (Box b: boxs[i]) {
+		for (int i=0;i< width;i++){
+			for (int j=0;j<width;j++){
+				if (boxs[i][j].getValue() == cantidad){
+					posiciones[0] = i;
+					posiciones[1] = j;
+				}
+			}
+		}
+		return posiciones;
+	}
+	public Box searchBox(int cantidad){
+		if(cantidad <= 1) {
+			return boxs[width-1][0];
+		}
+		for (int i = 0; i < width; i++) {
+			for (Box b : boxs[i]) {
 				if (b.getValue() == cantidad) {
 					return b;
 				}
@@ -297,37 +340,51 @@ public class Tablero {
 
 	public Snake searchSnake(Ficha ficha) throws StairsAndSnakesException{
 		int value = ficha.getBox().getValue();
-		int diferencia, menorSerpiente = 10*width;
-		for (Snake s: snakes) {
-			Box casIni = s.casillainicial;
-			if (casIni.getValue() < value) {
-				diferencia = value - casIni.getValue();
-				if(diferencia < menorSerpiente){
-					menorSerpiente = casIni.getValue();
+		int diferencia, menorSerpiente = width*width;
+		int index = width;
+		for (int i=0; i<width;i++){
+			for(Box b: boxs[i]){
+				if(b.hasAnyTramp() && b.getItem() instanceof Snake){
+					Tramp tramp = (Snake) b.getItem();
+					if (tramp.getCasillaInicial().getValue() < value) {
+						Box inicio = tramp.getCasillaInicial();
+						diferencia = value - inicio.getValue();
+						if (diferencia < menorSerpiente){
+							menorSerpiente = diferencia;
+							index = inicio.getValue();
+						}
+					}
 				}
 			}
 		}
-		Item snake = searchBox(menorSerpiente).getItem();
-		if (menorSerpiente == 10*width || snake == null) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_SNAKE);
+		if (menorSerpiente == width*width) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_SNAKE);
+		Item snake = searchBox(index).getItem();
 		return (Snake) snake;
 	}
 
 	public Stair searchStair(Ficha ficha) throws StairsAndSnakesException{
 		int value = ficha.getBox().getValue();
-		int diferencia, mayorEscalera = 10*width;
-
-		for (Stair s: stairs) {
-			Box casIni = s.casillainicial;
-			if (casIni.getValue() > value) {
-				diferencia = casIni.getValue() - value;
-				if(diferencia < mayorEscalera ){
-					mayorEscalera = casIni.getValue();
+		int diferencia, menorEscalera = width*width;
+		int index = width;
+		for (int i=0; i<width;i++){
+			for(Box b: boxs[i]){
+				if(b.hasAnyTramp() && b.getItem() instanceof Stair){
+					Tramp tramp = (Stair) b.getItem();
+					if (tramp.getCasillaInicial().getValue() > value) {
+						Box inicio = tramp.getCasillaInicial();
+						diferencia = inicio.getValue() - value;
+						if (diferencia < menorEscalera){
+							menorEscalera = diferencia;
+							index = inicio.getValue();
+						}
+					}
 				}
 			}
 		}
-		Item stair = searchBox(mayorEscalera).getItem();
-		if(mayorEscalera == 10*width || stair == null) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_STAIR);
+		if (menorEscalera == width*width) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_FOUND_STAIR);
+		Item stair = searchBox(index).getItem();
 		return (Stair) stair;
 	}
+
 }
 

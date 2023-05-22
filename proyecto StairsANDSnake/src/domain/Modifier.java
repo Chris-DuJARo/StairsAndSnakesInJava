@@ -8,7 +8,7 @@ public abstract class Modifier implements Item {
 		SetObject();
 	}
 	@Override
-	public abstract void DoAction(Ficha ficha);
+	public abstract void DoAction(Ficha ficha) throws StairsAndSnakesException;
 
 	@Override
 	public abstract String toString();
