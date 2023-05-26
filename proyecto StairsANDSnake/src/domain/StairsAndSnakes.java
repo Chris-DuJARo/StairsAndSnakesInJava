@@ -10,12 +10,17 @@ public class StairsAndSnakes {
 	private int turno = 0;
 
 	protected  boolean win = false;
-	public StairsAndSnakes (ArrayList<String> nombres, ArrayList<Color> colores,String rival, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
+	public StairsAndSnakes (ArrayList<String> nombres, ArrayList<Color> colores,String rival, int tamano, int numE, int numS, boolean transformar, int porC, int porM,String dificultad) throws StairsAndSnakesException{
+		if(colores.get(0).equals(colores.get(1))) throw  new StairsAndSnakesException(StairsAndSnakesException.SAME_COLORS);
+		if(nombres.get(0).equals(nombres.get(1))) throw new StairsAndSnakesException(StairsAndSnakesException.SAME_NAMES);
 		if (nombres.get(0).length() < 1 || nombres.get(1).length() < 1) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_PLAYERS);
 		if (porM > 6) throw  new StairsAndSnakesException(StairsAndSnakesException.NOT_ALLOW_MODIFIERS);
 		if(porC > (10*tamano) /4) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_PORC_ALLOW);
 		if((numE + numS)*2 > ((10*tamano)/2) - (1 + porC)) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ENOUGHT_SPACE);
-		tablero = new Tablero(nombres,colores,numS,numE,tamano,porC,porM,transformar);
+		if (rival.equals("Player")) tablero = new Tablero(nombres,colores,numS,numE,tamano,porC,porM,transformar);
+		else {
+			tablero = new Tablero(nombres.get(1),colores,numS,numE,tamano,porC,porM,transformar,dificultad);
+		}
 	}
 	public StairsAndSnakes(String nombre, Color color,String rival, int tamano, int numE, int numS, boolean transformar, int porC, int porM) throws StairsAndSnakesException{
 		if(porC > 50) throw new StairsAndSnakesException(StairsAndSnakesException.NOT_PORC_ALLOW);

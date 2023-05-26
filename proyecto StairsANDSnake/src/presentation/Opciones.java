@@ -75,13 +75,13 @@ public class Opciones extends JDialog{
 		dificultad.setBounds(430, 60, 300, 30);
 		dificultad.setFont(fuente);
 		String[] rivales = {"Player","Machine"},tiporivales = {"Principiante","Aprendiz"};
-		selectRival = new JComboBox<String>(rivales);
+		selectRival = new JComboBox<>(rivales);
 		selectRival.setSelectedItem(rivales[0]);
 		selectRival.setBounds(185, 55, 180, 40);
 		selectRival.setFont(fuente);
 		selectRival.setBackground(Color.white);
 		selectRival.setBorder(borde);
-		selectdificultad = new JComboBox<String>(tiporivales);
+		selectdificultad = new JComboBox<>(tiporivales);
 		selectdificultad.setSelectedItem(tiporivales[0]);
 		selectdificultad.setBounds(550, 55, 180, 40);
 		selectdificultad.setFont(fuente);
@@ -160,7 +160,7 @@ public class Opciones extends JDialog{
     	juego.setOpaque(false);
     	juego.setBounds(40, 290, 910, 250);
     	JLabel casillas = new JLabel("% Specials"), modificadores = new JLabel("% Modifiers"), escaleras = new JLabel("Number of Stairs"), serpientes = new JLabel ("Number of Snakes");
-    	JLabel transformar = new JLabel("Transform"), tablero = new JLabel("Board Size");
+    	JLabel transformar = new JLabel("Transform"), tablero = new JLabel("Boxes/Rows");
     	casillas.setBounds(20, 55, 400, 30);
     	casillas.setFont(fuente);
     	modificadores.setBounds(20, 120, 400, 30);
@@ -273,7 +273,7 @@ public class Opciones extends JDialog{
 		String dificultad = (String)selectdificultad.getSelectedItem();
 		try {
 			juego eys;
-			eys = new juego(nombre1, nombre2, coloruno, colordos, tipoRival, casilla, modificador, tablero, serpiente, escalera, transformar, dificultad);
+			eys = new 	juego(nombre1, nombre2, coloruno, colordos, tipoRival, casilla, modificador, tablero, serpiente, escalera, transformar, dificultad);
 			eys.setVisible(true);
 			dispose();
 		}catch (StairsAndSnakesException e) {

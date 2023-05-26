@@ -3,6 +3,8 @@ package domain;
 import java.awt.*;
 
 public class Ficha {
+
+	private Player owner;
 	private final Color color;
 	private Box casilla;
 	private int stairs = 0;
@@ -13,17 +15,22 @@ public class Ficha {
 
 	private int numSpecialBox = 0;
 
+	private int numMod = 0;
+
 	public boolean canMove = true;
 
-
-
 	public Ficha(Player player) {
+		owner = player;
 		color = player.getColor();
 		player.setToken(this);
 	}
 
 	public Box getBox() {
 		return casilla;
+	}
+
+	public Player getOwner(){
+		return owner;
 	}
 
 	public int getStairs(){
@@ -48,6 +55,14 @@ public class Ficha {
 
 	public void setMaxCas(int value){
 		if (maxCas < value) maxCas = value;
+	}
+
+	public int getNumMod(){
+		return numMod;
+	}
+
+	public void setNumMod(){
+		numMod++;
 	}
 
 	public int getNumSpecialBox(){

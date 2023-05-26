@@ -1,9 +1,8 @@
 package domain;
 
-import org.yaml.snakeyaml.tokens.Token;
-
 import javax.swing.*;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Box {
@@ -59,18 +58,23 @@ public class Box {
 		this.item = item;
 	}
 
-	public void moveToken(Ficha ficha) throws StairsAndSnakesException {
+	public void moveToken(Ficha ficha, int cantidad) throws StairsAndSnakesException {
+		int res;
 		Dado dado = tablero.getDados().get(0);
 		Valor cara = dado.getDado();
-		int cantidad = value + cara.getNumero();
+
 		if (cantidad <= tablero.getWidth()*tablero.getWidth()) {
 			ficha.setMaxCas(cantidad);
 			deleteToken(ficha);
 			Box reNew = tablero.searchBox(cantidad);
 			reNew.addToken(ficha.getColor(), ficha);
 			if (cara.getModifier() != null) {
-				int res = JOptionPane.showConfirmDialog(null, "Ha atrapado un modificador de " +
-						cara.getModifier().toString() + " Desea usarlo? ");
+				if (ficha.getOwner() instanceof  Machine) {
+					res = ((Machine)ficha.getOwner()).getDecision();
+				}else {
+					res = JOptionPane.showConfirmDialog(null, "Ha atrapado un modificador de " +
+							cara.getModifier().toString() + " Desea usarlo? ");
+				}
 				if (JOptionPane.OK_OPTION == res) {
 					moveTokenWithModifer(ficha, cara);
 				} else {
@@ -82,6 +86,9 @@ public class Box {
 						trampa.DoAction(ficha);
 					}
 				}
+
+			}else if (cara.getModifier() != null && ficha.getOwner() instanceof Machine){
+				moveTokenWithModifer(ficha,cara);
 			} else if (cara.getModifier() == null) {
 				if (reNew.hasApower()) {
 					reNew.moveTokenWithPower(ficha);
@@ -95,7 +102,9 @@ public class Box {
 			throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ALLOW_MOVEMENT);
 		}
 	}
+
 	private void moveTokenWithModifer(Ficha ficha,Valor movimiento)throws StairsAndSnakesException {
+		ficha.setNumMod();
 		Modifier modifier = movimiento.getModifier();
 		modifier.DoAction(ficha);
 	}

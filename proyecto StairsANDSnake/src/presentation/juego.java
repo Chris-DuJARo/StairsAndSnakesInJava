@@ -6,7 +6,6 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import domain.*;
 import domain.Box;
 
 
@@ -29,14 +28,13 @@ public class juego extends JFrame {
 		nom2 = new JLabel(nombre2);
 		col1 = new JLabel(coloruno);
 		col2 = new JLabel(colordos);
-		mod1 = new JLabel(Integer.toString(modificador));
-		mod2 = new JLabel(Integer.toString(modificador));
-		prepareStairsAndSnakes(nombre1, nombre2, casilla, modificador, tablero, escalera, serpiente, transformar, coloruno, colordos, tipoRival);
+		prepareStairsAndSnakes(nombre1, nombre2, casilla, modificador, tablero, escalera, serpiente, transformar, coloruno, colordos, tipoRival,dificultad);
 		prepareElements();
 		prepareActions();
+		if (stairsandsnakes.getTablero().getJugador("Machine") != null) movePlayer();
 	}
 
-	private void prepareStairsAndSnakes(String nombre1, String nombre2, int casilla, int modificador, String tablero, String escalera, String serpiente, String transformar, String coloruno, String colordos, String tipoRival) throws StairsAndSnakesException {
+	private void prepareStairsAndSnakes(String nombre1, String nombre2, int casilla, int modificador, String tablero, String escalera, String serpiente, String transformar, String coloruno, String colordos, String tipoRival,String dificultad) throws StairsAndSnakesException {
 		ArrayList<String> nombres = new ArrayList<>();
 		ArrayList<Color> colores = new ArrayList<>();
 		boolean trans;
@@ -47,10 +45,11 @@ public class juego extends JFrame {
 		trans = transformar.equals("Yes");
 		if (tablero.equals("") || escalera.equals("") || serpiente.equals(""))
 			throw new StairsAndSnakesException(StairsAndSnakesException.NOT_ALL_SPACES_FULL);
+
 		int tab = Integer.parseInt(tablero);
 		int ser = Integer.parseInt(serpiente);
 		int esc = Integer.parseInt(escalera);
-		stairsandsnakes = new StairsAndSnakes(nombres, colores, tipoRival, tab, ser, esc, trans, casilla, modificador);
+		stairsandsnakes = new StairsAndSnakes(nombres, colores, tipoRival, tab, ser, esc, trans, casilla, modificador,dificultad);
 	}
 
 	private void prepareElements() {
@@ -218,6 +217,8 @@ public class juego extends JFrame {
 		maxcas2 = new JLabel("1");
 		casEsp1 = new JLabel("0");
 		casEsp2 = new JLabel("0");
+		mod1 = new JLabel("0");
+		mod2 = new JLabel("0");
 		numMod1 = new JLabel("Modificadores: ");
 		nombre1 = new JLabel("Nombre: ");
 		color1 = new JLabel("Color: ");
@@ -368,8 +369,14 @@ public class juego extends JFrame {
 		volver.addActionListener(oyenteDeVolver);
 		ActionListener oyenteDeFinalizar = e -> exit();
 		finalizar.addActionListener(oyenteDeFinalizar);
-		ActionListener oyenteDeMover = e -> movePlayer();
-		lanzar.addActionListener(oyenteDeMover);
+
+		if (stairsandsnakes.getTablero().getJugador("Machine") == null) {
+			ActionListener oyenteDeMover = e -> movePlayer();
+			lanzar.addActionListener(oyenteDeMover);
+		} else {
+			ActionListener oyenteDeMover = e -> movePlayers();
+			lanzar.addActionListener(oyenteDeMover);
+		}
 	}
 
 	private void changeColor(){
@@ -427,10 +434,29 @@ public class juego extends JFrame {
 		}
 	}
 
+	private void movePlayers(){
+		String name;
+		for (JLabel jLabel : Arrays.asList(nom2, nom1)) {
+			name = jLabel.getText();
+			stairsandsnakes.changeDados(name);
+			if (name.equals(nom2.getText())){
+				paintDados();
+			}
+			try {
+				stairsandsnakes.movePlayer(name);
+				if(stairsandsnakes.getWin()) System.exit(0);
+			} catch (StairsAndSnakesException e){
+				JOptionPane.showMessageDialog(this,e.getMessage());
+			}
+		}
+		moveTokens();
+		repaint();
+		updateJLabels();
+	}
+
 	private void movePlayer() {
 		String name;
 		int turno = stairsandsnakes.getTurno();
-
 		if (turno %2 == 0){
 			name = nom1.getText();
 			stairsandsnakes.changeDados(name);
@@ -468,6 +494,7 @@ public class juego extends JFrame {
 		updateSnakes(ficha1.getSnakes(),ficha2.getSnakes());
 		updateMaxBox(ficha1.getMaxCas(),ficha2.getMaxCas());
 		updateEspecialBox(ficha1.getNumSpecialBox(),ficha2.getNumSpecialBox());
+		updateMods(ficha1.getNumMod(),ficha2.getNumMod());
 	}
 
 	private void updateStairs(int stairs1, int stairs2){
@@ -488,6 +515,11 @@ public class juego extends JFrame {
 	private void updateEspecialBox(int specialCas1, int specialCas2){
 		casEsp1.setText(Integer.toString(specialCas1));
 		casEsp2.setText(Integer.toString(specialCas2));
+	}
+
+	private void updateMods(int modi1, int modi2){
+		mod1.setText(Integer.toString(modi1));
+		mod2.setText(Integer.toString(modi2));
 	}
 
 	private void paintDados(){
@@ -529,8 +561,8 @@ public class juego extends JFrame {
 		for (int i=0; i<tablero.getWidth();i++){
 			for (Box b: tablero.getBoxs()[i]){
 				tokens = b.getTokens();
-				ficha = tokens.get(verifyColor(col1.getText()));
 
+				ficha = tokens.get(verifyColor(col1.getText()));
 				if (ficha !=null) {
 					int value = ficha.getBox().getValue();
 					int[] rowAndCol = tablero.searchRowAndColumn(value);

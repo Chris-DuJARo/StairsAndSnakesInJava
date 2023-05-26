@@ -78,7 +78,7 @@ public class StairsAndSnakesTest {
         colores.add(Color.RED);
         colores.add(Color.BLUE);
 
-        myStairsGame = new StairsAndSnakes(nombres,colores,"Humano",10,0,0,false,0,0);
+        myStairsGame = new StairsAndSnakes(nombres,colores,"Humano",10,0,0,false,0,0,"Facil");
         myTablero = myStairsGame.getTablero();
         assertEquals(myTablero.getJugador("Christian").getName(),"Christian");
         assertEquals(myTablero.getJugador("Miguel").getName(),"Miguel");

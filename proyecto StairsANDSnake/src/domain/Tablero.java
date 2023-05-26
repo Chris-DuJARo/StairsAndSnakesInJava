@@ -30,6 +30,18 @@ public class Tablero {
 		
 	}
 
+	public Tablero(String nombre, ArrayList<Color> colores, int numSnakes, int numStairs, int tamano, int porC, int porM, boolean transformar, String dificultad){
+		players = new HashMap<>();
+		snakes = new ArrayList<>();
+		stairs = new ArrayList<>();
+		width = tamano;
+		makeBoxes(porC,numStairs,numSnakes);
+		makeStairs(numStairs,transformar);
+		makeSnakes(numSnakes,transformar);
+		makeDados(porM);
+		makePlayer(nombre,colores,dificultad);
+	}
+
 	public int getWidth(){
 		return width;
 	}
@@ -40,6 +52,21 @@ public class Tablero {
 
 	public Box[][] getBoxs(){
 		return boxs;
+	}
+
+	public ArrayList<Box> getSpecials(Ficha ficha){
+		ArrayList<Box> specials = new ArrayList<>();
+		Box casillaInicial = ficha.getBox(),casillaPower;
+		int position = casillaInicial.getValue();
+		Dado dado = getDados().get(0);
+
+		for (int i=0; i<dado.getDado().getNumero() - 1; i++){
+			casillaPower = searchBox(position +i+1);
+			if (searchBox(casillaPower.getValue()).hasApower()){
+				specials.add(casillaPower);
+			}
+		}
+		return specials;
 	}
 
 	private void makeDados(int porM){
@@ -53,6 +80,15 @@ public class Tablero {
 			players.put(nombres.get(i), jugador);
 			makeToken(jugador);
 		}
+	}
+
+	private void makePlayer(String nombre, ArrayList<Color> colores,String dificultad) {
+		Player maquina = new Machine("Machine",colores.get(0),dificultad,dados);
+		players.put("Machine",maquina);
+		makeToken(maquina);
+		Player persona = new Player(nombre,colores.get(1),dados);
+		players.put(nombre,persona);
+		makeToken(persona);
 	}
 
 	private void makeToken(Player jugador) {
@@ -232,7 +268,7 @@ public class Tablero {
 				int value = boxWithOutPower.getValue();
 				Box BoxWithPower = getRamdomBox();
 
-				if (!boxWithOutPower.hasApower() && value > 1 && value <width*10) {
+				if (!boxWithOutPower.hasApower() && value > 1 && value <width*width) {
 					setBox(fila, columna, BoxWithPower, value);
 					contador++;
 				}
